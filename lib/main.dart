@@ -2,10 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:watch_out/ui/pages/authentication/login.dart';
 import 'package:watch_out/ui/pages/authentication/signup.dart';
+import 'package:watch_out/ui/pages/landing_page.dart';
+import 'package:watch_out/ui/pages/main_pages/main_page.dart';
 import 'constants/palette.dart';
-import 'package:flutter/services.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const WatchOut());
 }
 
@@ -27,8 +34,10 @@ class WatchOut extends StatelessWidget {
       ),
       initialRoute: "/",
       routes: {
-        "/": (context) => const LoginPage(),
+        "/": (context) => const LandingPage(),
+        "/login": (context) => const LoginPage(),
         "/signUp": (context) => const SignUpPage(),
+        "/mainPage": (context) => const MainPage(),
       },
     );
   }

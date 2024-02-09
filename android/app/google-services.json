@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "993540512823",
+    "project_id": "watch-out-aa14f",
+    "storage_bucket": "watch-out-aa14f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:993540512823:android:18adf6d537395d024d33b2",
+        "android_client_info": {
+          "package_name": "com.example.watch_out"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "993540512823-9ransl1j0faacuv7uojo0lajjkdm8iqt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcwes7MT7W-uLJTpRY884Db4hGD0xy6WU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "993540512823-9ransl1j0faacuv7uojo0lajjkdm8iqt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "993540512823-9mvrlgi13ge6jmaectsfn54riqii8es8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.watchOut"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

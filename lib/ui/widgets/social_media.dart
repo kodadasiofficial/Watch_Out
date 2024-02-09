@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_out/constants/fonts.dart';
+import 'package:watch_out/firebase/auth.dart';
 
 class SocialMediaConnection extends StatelessWidget {
   final bool isRegister;
@@ -18,7 +19,7 @@ class SocialMediaConnection extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Text(
-            isRegister ? "-Or Connect With" : "-Or Sign Up With",
+            isRegister ? "-Or Connect With-" : "-Or Sign In With-",
             style: TextStyle(
               fontSize: Font.loginFontSize,
             ),
@@ -28,11 +29,20 @@ class SocialMediaConnection extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset("assets/images/google.png"),
+              IconButton(
+                onPressed: () => AuthService().signInWithGoogle(context),
+                icon: Image.asset("assets/images/google.png"),
+              ),
               const SizedBox(width: 30),
-              Image.asset("assets/images/facebook.png"),
+              IconButton(
+                onPressed: () => AuthService().signInWithGoogle(context),
+                icon: Image.asset("assets/images/facebook.png"),
+              ),
               const SizedBox(width: 30),
-              Image.asset("assets/images/apple.png"),
+              IconButton(
+                onPressed: () => AuthService().signInWithGoogle(context),
+                icon: Image.asset("assets/images/apple.png"),
+              ),
             ],
           ),
           const SizedBox(height: 10),
@@ -58,7 +68,7 @@ class SocialMediaConnection extends StatelessWidget {
                   ),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () => isRegister
-                        ? Navigator.pushNamed(context, "/")
+                        ? Navigator.pushNamed(context, "/login")
                         : Navigator.pushNamed(context, "/signUp"),
                 ),
               ],

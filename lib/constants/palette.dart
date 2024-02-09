@@ -5,4 +5,5 @@ class Palette {
   static Color lightGreen = const Color(0xffCAD7B1);
   static Color darkGreen = const Color(0xff4D700A);
   static Color buttonGreen = const Color(0xffA5D448);
+  static Color bottomNavigationBar = const Color(0xff005A87);
 }

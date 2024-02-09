@@ -6,6 +6,9 @@ class CustomTextField extends StatelessWidget {
   final double vertPadd;
   final String? hinText;
   final Icon? icon;
+  final String? Function(String?)? validator;
+  final bool isPassword;
+  final TextEditingController? controller;
 
   const CustomTextField({
     super.key,
@@ -13,6 +16,9 @@ class CustomTextField extends StatelessWidget {
     this.vertPadd = 15,
     this.hinText,
     this.icon,
+    this.validator,
+    this.isPassword = false,
+    this.controller,
   });
 
   @override
@@ -24,14 +30,18 @@ class CustomTextField extends StatelessWidget {
         top: vertPadd,
       ),
       child: TextFormField(
+        obscureText: isPassword,
         decoration: InputDecoration(
-            prefixIcon: icon,
-            filled: true,
-            fillColor: Palette.lightGreen,
-            hintText: hinText,
-            border: const UnderlineInputBorder(
-              borderSide: BorderSide.none,
-            )),
+          prefixIcon: icon,
+          filled: true,
+          fillColor: Palette.lightGreen,
+          hintText: hinText,
+          border: const UnderlineInputBorder(
+            borderSide: BorderSide.none,
+          ),
+        ),
+        validator: validator,
+        controller: controller,
       ),
     );
   }
