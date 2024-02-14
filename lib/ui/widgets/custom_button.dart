@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:watch_out/constants/palette.dart';
 
 class CustomButton extends StatelessWidget {
-  EdgeInsetsGeometry padding;
-  String? text;
-  double width;
-  double height;
-  TextStyle textStyle;
-  void Function() onPressed;
-  CustomButton({
+  final EdgeInsetsGeometry padding;
+  final String? text;
+  final double width;
+  final double height;
+  final TextStyle textStyle;
+  final double borderRadius;
+  final void Function() onPressed;
+  const CustomButton({
     super.key,
     required this.onPressed,
     this.padding = const EdgeInsets.only(
@@ -23,6 +24,7 @@ class CustomButton extends StatelessWidget {
       color: Colors.black,
       fontSize: 18,
     ),
+    this.borderRadius = 0,
   });
 
   @override
@@ -32,6 +34,9 @@ class CustomButton extends StatelessWidget {
       alignment: Alignment.center,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(borderRadius),
+          ),
           backgroundColor: Palette.buttonGreen,
           fixedSize: Size(width, height),
         ),

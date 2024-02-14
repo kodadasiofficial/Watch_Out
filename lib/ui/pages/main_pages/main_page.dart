@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:watch_out/constants/fonts.dart';
 import 'package:watch_out/constants/palette.dart';
 import 'package:watch_out/firebase/auth.dart';
 import 'package:watch_out/ui/pages/authentication/login.dart';
+import 'package:watch_out/ui/pages/main_pages/add_reports.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -16,21 +18,51 @@ class _MainPageState extends State<MainPage> {
   static final List<Widget> _bottomBarItems = <Widget>[
     Container(),
     LoginPage(),
+    AddReport(),
     LoginPage(),
     LoginPage(),
-    LoginPage(),
+  ];
+
+  static final _titles = <String>[
+    "Home",
+    "Map",
+    "Add",
+    "Reports",
+    "Profile",
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Palette.mainPage,
+        elevation: 0,
+        centerTitle: true,
         leading: IconButton(
           onPressed: () {
             AuthService().signOut(context);
           },
-          icon: const Icon(Icons.logout),
+          icon: Icon(
+            Icons.notifications,
+            color: Palette.darkGreen,
+          ),
         ),
+        title: Text(
+          _titles[_selectedIndex],
+          style: TextStyle(
+            color: Palette.mainPageTitle,
+            fontSize: Font.createAccountFontSize,
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.settings,
+              color: Palette.darkGreen,
+            ),
+          )
+        ],
       ),
       body: _bottomBarItems.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(

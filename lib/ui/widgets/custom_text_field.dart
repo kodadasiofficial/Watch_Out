@@ -9,16 +9,20 @@ class CustomTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final bool isPassword;
   final TextEditingController? controller;
+  final double borderRadius;
+  final int lineCount;
 
   const CustomTextField({
     super.key,
     this.horPadd = 50,
     this.vertPadd = 15,
+    this.borderRadius = 0,
     this.hinText,
     this.icon,
     this.validator,
     this.isPassword = false,
     this.controller,
+    this.lineCount = 1,
   });
 
   @override
@@ -30,14 +34,17 @@ class CustomTextField extends StatelessWidget {
         top: vertPadd,
       ),
       child: TextFormField(
+        minLines: lineCount,
+        maxLines: lineCount,
         obscureText: isPassword,
         decoration: InputDecoration(
           prefixIcon: icon,
           filled: true,
           fillColor: Palette.lightGreen,
           hintText: hinText,
-          border: const UnderlineInputBorder(
+          border: UnderlineInputBorder(
             borderSide: BorderSide.none,
+            borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
           ),
         ),
         validator: validator,
