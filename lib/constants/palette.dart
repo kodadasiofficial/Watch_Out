@@ -9,4 +9,5 @@ class Palette {
   static Color mainPage = const Color(0xffE0E4C9);
   static Color mainPageTitle = const Color(0xff005A87);
   static Color dropdownBackground = const Color(0xffE0E2D3);
+  static Color buttonBlue = const Color(0xff005A87);
 }

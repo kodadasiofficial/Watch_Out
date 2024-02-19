@@ -1,9 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:watch_out/constants/palette.dart';
-import 'package:watch_out/firebase/personal_infos.dart';
+import 'package:watch_out/backend/firebase/personal_infos.dart';
 import 'package:watch_out/ui/widgets/snack_bar.dart';
 
 class AuthService {
@@ -13,6 +11,10 @@ class AuthService {
     return _auth.currentUser != null;
   }
 
+  User? getCurrentUser() {
+    return _auth.currentUser;
+  }
+
   Future<void> signUp(
     BuildContext context,
     String name,
@@ -20,7 +22,7 @@ class AuthService {
     String password,
   ) async {
     try {
-      UserCredential user = await _auth.createUserWithEmailAndPassword(
+      await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -47,7 +49,7 @@ class AuthService {
     String password,
   ) async {
     try {
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+      await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );

@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_out/constants/fonts.dart';
-import 'package:watch_out/firebase/auth.dart';
+import 'package:watch_out/backend/firebase/auth.dart';
 
 class SocialMediaConnection extends StatelessWidget {
   final bool isRegister;

@@ -1,9 +1,8 @@
 import 'package:email_validator/email_validator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_out/constants/palette.dart';
-import 'package:watch_out/firebase/auth.dart';
+import 'package:watch_out/backend/firebase/auth.dart';
 import 'package:watch_out/ui/widgets/custom_button.dart';
 import 'package:watch_out/ui/widgets/custom_text_field.dart';
 import 'package:watch_out/constants/fonts.dart';

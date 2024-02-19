@@ -11,6 +11,7 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController? controller;
   final double borderRadius;
   final int lineCount;
+  final Color? fillColor;
 
   const CustomTextField({
     super.key,
@@ -23,6 +24,7 @@ class CustomTextField extends StatelessWidget {
     this.isPassword = false,
     this.controller,
     this.lineCount = 1,
+    this.fillColor,
   });
 
   @override
@@ -40,7 +42,7 @@ class CustomTextField extends StatelessWidget {
         decoration: InputDecoration(
           prefixIcon: icon,
           filled: true,
-          fillColor: Palette.lightGreen,
+          fillColor: fillColor ?? Palette.lightGreen,
           hintText: hinText,
           border: UnderlineInputBorder(
             borderSide: BorderSide.none,

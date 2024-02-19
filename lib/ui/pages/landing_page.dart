@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:watch_out/firebase/auth.dart';
+import 'package:watch_out/backend/firebase/auth.dart';
 import 'package:watch_out/ui/pages/authentication/login.dart';
 import 'package:watch_out/ui/pages/main_pages/main_page.dart';
 

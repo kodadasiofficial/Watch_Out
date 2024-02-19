@@ -9,6 +9,8 @@ class CustomButton extends StatelessWidget {
   final TextStyle textStyle;
   final double borderRadius;
   final void Function() onPressed;
+  final Alignment alignment;
+  final Color? color;
   const CustomButton({
     super.key,
     required this.onPressed,
@@ -25,19 +27,21 @@ class CustomButton extends StatelessWidget {
       fontSize: 18,
     ),
     this.borderRadius = 0,
+    this.alignment = Alignment.center,
+    this.color,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: padding,
-      alignment: Alignment.center,
+      alignment: alignment,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
           ),
-          backgroundColor: Palette.buttonGreen,
+          backgroundColor: color ?? Palette.buttonGreen,
           fixedSize: Size(width, height),
         ),
         onPressed: onPressed,

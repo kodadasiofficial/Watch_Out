@@ -3,8 +3,13 @@ import 'package:watch_out/constants/palette.dart';
 
 class CustomDropdown extends StatelessWidget {
   final List<String> items;
+  final TextEditingController? controller;
 
-  const CustomDropdown({super.key, this.items = const []});
+  const CustomDropdown({
+    super.key,
+    required this.items,
+    this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +19,7 @@ class CustomDropdown extends StatelessWidget {
         vertical: 10,
       ),
       child: DropdownMenu(
+        controller: controller,
         width: MediaQuery.of(context).size.width - 40,
         menuStyle: MenuStyle(
           backgroundColor: MaterialStateColor.resolveWith(

@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_out/constants/fonts.dart';
 import 'package:watch_out/constants/palette.dart';
-import 'package:watch_out/firebase/auth.dart';
-import 'package:watch_out/ui/pages/authentication/login.dart';
+import 'package:watch_out/backend/firebase/auth.dart';
 import 'package:watch_out/ui/pages/main_pages/add_reports.dart';
+import 'package:watch_out/ui/pages/main_pages/home_page.dart';
+import 'package:watch_out/ui/pages/main_pages/reports.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -15,13 +15,8 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
-  static final List<Widget> _bottomBarItems = <Widget>[
-    Container(),
-    LoginPage(),
-    AddReport(),
-    LoginPage(),
-    LoginPage(),
-  ];
+  final GlobalKey navigationBarKey = GlobalKey();
+  late final List<Widget> _bottomBarItems;
 
   static final _titles = <String>[
     "Home",
@@ -30,6 +25,20 @@ class _MainPageState extends State<MainPage> {
     "Reports",
     "Profile",
   ];
+
+  @override
+  void initState() {
+    _bottomBarItems = <Widget>[
+      HomePage(
+        navigationBarKey: navigationBarKey,
+      ),
+      Container(),
+      const AddReport(),
+      const ReportsPage(),
+      Container(),
+    ];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +75,7 @@ class _MainPageState extends State<MainPage> {
       ),
       body: _bottomBarItems.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
+        key: navigationBarKey,
         type: BottomNavigationBarType.fixed,
         backgroundColor: Palette.bottomNavigationBar,
         selectedItemColor: Palette.buttonGreen,

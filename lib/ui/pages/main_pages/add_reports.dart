@@ -1,12 +1,14 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:watch_out/backend/services/location_service.dart';
 import 'package:watch_out/constants/fonts.dart';
 import 'package:watch_out/constants/palette.dart';
+import 'package:watch_out/backend/firebase/reports_data.dart';
 import 'package:watch_out/ui/widgets/custom_dropdown.dart';
+import 'package:watch_out/ui/widgets/custom_map.dart';
 import 'package:watch_out/ui/widgets/custom_text_field.dart';
-import 'package:location/location.dart' as loc;
+import 'package:watch_out/ui/widgets/snack_bar.dart';
 
 class AddReport extends StatefulWidget {
   const AddReport({super.key});
@@ -16,169 +18,164 @@ class AddReport extends StatefulWidget {
 }
 
 class _AddReportState extends State<AddReport> {
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
+  TextEditingController reportType = TextEditingController();
+  TextEditingController report = TextEditingController();
+  TextEditingController reportHeadController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: LocationService().getLocation(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data != null) {
+            return locationEnabledWidget(snapshot.data!);
+          } else {
+            return locationDisabledWidget();
+          }
+        } else {
+          return Container(
+            color: Palette.mainPage,
+            alignment: Alignment.center,
+            child: CircularProgressIndicator(
+              color: Palette.lightGreen,
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  Widget locationEnabledWidget(LatLng location) {
     return Scaffold(
       backgroundColor: Palette.mainPage,
-      body: FutureBuilder(
-        future: getLocation(),
-        builder: (context, snapshot) => !snapshot.hasData
-            ? Container(
-                alignment: Alignment.center,
-                child: CircularProgressIndicator(
-                  color: Palette.lightGreen,
-                ),
-              )
-            : SingleChildScrollView(
-                child: Container(
-                  color: Palette.mainPage,
-                  child: Form(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            right: 20,
-                            left: 20,
-                            top: 20,
-                            bottom: 5,
-                          ),
-                          child: Text(
-                            "Report Zone",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: Font.reportsFontSize,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 10,
-                          ),
-                          child: SizedBox(
-                            height: 200,
-                            width: MediaQuery.of(context).size.width - 20,
-                            child: GoogleMap(
-                              compassEnabled: false,
-                              mapToolbarEnabled: false,
-                              rotateGesturesEnabled: false,
-                              scrollGesturesEnabled: false,
-                              myLocationEnabled: true,
-                              myLocationButtonEnabled: false,
-                              zoomControlsEnabled: false,
-                              zoomGesturesEnabled: false,
-                              mapType: MapType.normal,
-                              initialCameraPosition: CameraPosition(
-                                target: snapshot.requireData,
-                                zoom: 14.4746,
-                              ),
-                              onMapCreated: (GoogleMapController controller) {
-                                _controller.complete(controller);
-                              },
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 5,
-                          ),
-                          child: Text(
-                            "Select Report Type",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: Font.reportsFontSize,
-                            ),
-                          ),
-                        ),
-                        const CustomDropdown(
-                          items: ["Danger Zone", "Aid Zone"],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 5,
-                          ),
-                          child: Text(
-                            "Select Report",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: Font.reportsFontSize,
-                            ),
-                          ),
-                        ),
-                        const CustomDropdown(
-                          items: [
-                            "Shelling",
-                            "Riffle Gun",
-                            "Radioactive Material",
-                            "Fire",
-                            "Earthquake",
-                            "Food",
-                            "House",
-                            "Water",
-                            "Internet",
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: 20,
-                            right: 20,
-                            top: 15,
-                            bottom: 5,
-                          ),
-                          child: Text(
-                            "Report Heading",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: Font.reportsFontSize,
-                            ),
-                          ),
-                        ),
-                        const CustomTextField(
-                          hinText: "Report Heading",
-                          horPadd: 20,
-                          vertPadd: 10,
-                          borderRadius: 10,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: 20,
-                            right: 20,
-                            top: 15,
-                            bottom: 5,
-                          ),
-                          child: Text(
-                            "Report Description",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: Font.reportsFontSize,
-                            ),
-                          ),
-                        ),
-                        const CustomTextField(
-                          hinText: "Report Description",
-                          horPadd: 20,
-                          vertPadd: 10,
-                          borderRadius: 10,
-                          lineCount: 5,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                      ],
+      body: SingleChildScrollView(
+        child: Container(
+          color: Palette.mainPage,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    right: 20,
+                    left: 20,
+                    top: 20,
+                    bottom: 5,
+                  ),
+                  child: Text(
+                    "Report Zone",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: Font.reportsFontSize,
                     ),
                   ),
                 ),
-              ),
+                CustomMap(location: location),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 5,
+                  ),
+                  child: Text(
+                    "Select Report Type",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: Font.reportsFontSize,
+                    ),
+                  ),
+                ),
+                CustomDropdown(
+                  items: const ["Danger Zone", "Aid Zone"],
+                  controller: reportType,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 5,
+                  ),
+                  child: Text(
+                    "Select Report",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: Font.reportsFontSize,
+                    ),
+                  ),
+                ),
+                CustomDropdown(
+                  items: const [
+                    "Shelling",
+                    "Riffle Gun",
+                    "Radioactive Material",
+                    "Fire",
+                    "Earthquake",
+                    "Food",
+                    "House",
+                    "Water",
+                    "Internet",
+                  ],
+                  controller: report,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 20,
+                    right: 20,
+                    top: 15,
+                    bottom: 5,
+                  ),
+                  child: Text(
+                    "Report Heading",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: Font.reportsFontSize,
+                    ),
+                  ),
+                ),
+                CustomTextField(
+                  hinText: "Report Heading",
+                  horPadd: 20,
+                  vertPadd: 10,
+                  borderRadius: 10,
+                  controller: reportHeadController,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 20,
+                    right: 20,
+                    top: 15,
+                    bottom: 5,
+                  ),
+                  child: Text(
+                    "Report Description",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: Font.reportsFontSize,
+                    ),
+                  ),
+                ),
+                CustomTextField(
+                  hinText: "Report Description",
+                  horPadd: 20,
+                  vertPadd: 10,
+                  borderRadius: 10,
+                  lineCount: 5,
+                  controller: descriptionController,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        shape: const CircleBorder(),
+        onPressed: () => addReport(location),
         backgroundColor: Palette.buttonGreen,
         child: const Text(
           "Post It",
@@ -192,40 +189,29 @@ class _AddReportState extends State<AddReport> {
     );
   }
 
-  Future<LatLng> getLocation() async {
-    loc.Location location = loc.Location();
-    bool serviceState = await location.serviceEnabled();
-    loc.LocationData locationData;
-    LatLng locationCoor;
-    if (!serviceState) {
-      try {
-        serviceState = await location.requestService();
-      } catch (e) {
-        locationCoor = const LatLng(39.92500587721513, 32.83693213015795);
-      }
-    } //Uygulamaya ilk girişte servis izni verilmediyse buraya girilir.
-    if (serviceState) {
-      loc.PermissionStatus permissionState = await location.hasPermission();
-      if (permissionState == loc.PermissionStatus.denied) {
-        try {
-          permissionState = await location.requestPermission();
-        } catch (e) {
-          locationCoor = const LatLng(39.929635, 32.8325187);
-        }
-      }
-      if (permissionState == loc.PermissionStatus.granted ||
-          permissionState == loc.PermissionStatus.grantedLimited) {
-        locationData = await location.getLocation();
-        locationCoor = LatLng(locationData.latitude!.toDouble(),
-            locationData.longitude!.toDouble());
-      } else if (permissionState == loc.PermissionStatus.deniedForever) {
-        locationCoor = const LatLng(39.929635, 32.8325187);
-      } else {
-        locationCoor = const LatLng(39.929635, 32.8325187);
-      }
-    } else {
-      locationCoor = const LatLng(39.929635, 32.8325187);
+  Widget locationDisabledWidget() {
+    return Scaffold(
+      backgroundColor: Palette.mainPage,
+      body: const Center(
+        child: Text("Please give location permission to add report"),
+      ),
+    );
+  }
+
+  Future<void> addReport(LatLng location) async {
+    bool res = await ReportsService().addReport(
+      context,
+      location,
+      reportType.text,
+      report.text,
+      reportHeadController.text,
+      descriptionController.text,
+    );
+    if (res) {
+      CustomSnackBar.showSnackBar(context, "Your Report Added Succesfully");
+      _formKey.currentState!.reset();
+      reportType.text = "Danger Zone";
+      report.text = "Shelling";
     }
-    return locationCoor;
   }
 }
