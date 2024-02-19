@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:watch_out/ui/pages/app_bar_pages/settings.dart';
 import 'package:watch_out/ui/pages/authentication/login.dart';
 import 'package:watch_out/ui/pages/authentication/signup.dart';
 import 'package:watch_out/ui/pages/landing_page.dart';
@@ -38,6 +39,7 @@ class WatchOut extends StatelessWidget {
         "/login": (context) => const LoginPage(),
         "/signUp": (context) => const SignUpPage(),
         "/mainPage": (context) => const MainPage(),
+        "/settingsPage": (context) => const SettingsPage()
       },
     );
   }

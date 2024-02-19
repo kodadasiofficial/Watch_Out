@@ -35,6 +35,13 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Container(
+              alignment: Alignment.topCenter,
+              child: Image.asset(
+                "assets/images/logo.png",
+                fit: BoxFit.cover,
+              ),
+            ),
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

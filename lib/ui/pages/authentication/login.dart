@@ -32,9 +32,16 @@ class _LoginPageState extends State<LoginPage> {
           top: MediaQuery.of(context).size.width / 4,
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Container(
+              alignment: Alignment.topCenter,
+              child: Image.asset(
+                "assets/images/logo.png",
+                fit: BoxFit.cover,
+              ),
+            ),
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -58,21 +65,6 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const SocialMediaConnection(),
           ],
-        ),
-      ),
-    );
-  }
-
-  void snackBar(String text) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: Palette.buttonGreen,
-        content: Text(
-          text,
-          style: const TextStyle(
-            fontSize: 16,
-            color: Colors.black,
-          ),
         ),
       ),
     );
