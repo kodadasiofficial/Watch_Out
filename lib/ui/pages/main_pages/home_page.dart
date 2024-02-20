@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
           return Scaffold(
             backgroundColor: Palette.mainPage,
             body: const Center(
-              child: Text("Something went wrong. Please try again"),
+              child: Text("Something went wrong. Please try again."),
             ),
           );
         } else {

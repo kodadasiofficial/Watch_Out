@@ -65,8 +65,8 @@ class Report extends WatchOutObject {
   }
 
   Report.fromMap(Map<String, dynamic> map)
-      : latitude = map["latitude"],
-        longitude = map["longitude"],
+      : latitude = map["latitude"].toDouble(),
+        longitude = map["longitude"].toDouble(),
         reporterName = map["reporter_name"],
         reporterProfilePhoto = map["reporter_profile_photo"],
         reportType = map["report_type"],

@@ -156,6 +156,7 @@ class _ReportWidgetState extends State<ReportWidget> {
                     ),
                     alignment: Alignment.center,
                     child: SingleChildScrollView(
+                      padding: const EdgeInsets.only(left: 10, right: 10),
                       child: Text(widget.report.description),
                     ),
                   ),

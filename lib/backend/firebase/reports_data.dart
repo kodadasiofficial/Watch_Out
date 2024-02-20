@@ -75,7 +75,8 @@ class ReportsService {
         if (location == null) {
           throw Error();
         } else {
-          var snapshot = await _reportRef.get();
+          var snapshot =
+              await _reportRef.orderBy("created_at", descending: true).get();
           List docs;
           if (isLimited) {
             docs = controlKm(snapshot.docs, location);
@@ -83,10 +84,16 @@ class ReportsService {
             docs = snapshot.docs;
           }
           docs.sort((a, b) {
-            double distanceA = Geolocator.distanceBetween(a.data()["latitude"],
-                a.data()["longitude"], location.latitude, location.longitude);
-            double distanceB = Geolocator.distanceBetween(b.data()["latitude"],
-                b.data()["longitude"], location.latitude, location.longitude);
+            double distanceA = Geolocator.distanceBetween(
+                a.data()["latitude"].toDouble(),
+                a.data()["longitude"].toDouble(),
+                location.latitude,
+                location.longitude);
+            double distanceB = Geolocator.distanceBetween(
+                b.data()["latitude"].toDouble(),
+                b.data()["longitude"].toDouble(),
+                location.latitude,
+                location.longitude);
             return distanceA.compareTo(distanceB);
           });
           return docs;

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:watch_out/backend/firebase/reports_data.dart';
-import 'package:watch_out/constants/fonts.dart';
 import 'package:watch_out/constants/palette.dart';
 import 'package:watch_out/models/report.dart';
 
@@ -42,25 +41,31 @@ class _NearReportCardState extends State<NearReportCard> {
         width: (MediaQuery.of(context).size.width - 40) / 2,
         height: 100,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  report.reportHead,
-                  style: TextStyle(
-                    fontSize: Font.loginFontSize,
-                    color: Palette.mainPageTitle,
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    report.reportHead,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Palette.mainPageTitle,
+                    ),
                   ),
-                ),
-                Text(
-                  report.reportType,
-                  style: const TextStyle(
-                    fontSize: 12,
+                  const SizedBox(
+                    width: 10,
                   ),
-                ),
-              ],
+                  Text(
+                    report.reportType,
+                    style: const TextStyle(
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
             ),
             Text(
               dateFormat.format(report.createdAt),
