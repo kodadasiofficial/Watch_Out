@@ -57,13 +57,13 @@ class ReportsService {
     return res;
   }
 
-  Future<List> getAllReports(bool latest) async {
+  Future<List> getAllReports(bool latest, {bool isLimited = false}) async {
     LatLng? location = await LocationService().getLocation();
     if (latest) {
       try {
         var snapshot =
             await _reportRef.orderBy("created_at", descending: true).get();
-        if (location != null) {
+        if (location != null && isLimited) {
           return controlKm(snapshot.docs, location);
         }
         return snapshot.docs;
@@ -76,7 +76,12 @@ class ReportsService {
           throw Error();
         } else {
           var snapshot = await _reportRef.get();
-          List docs = controlKm(snapshot.docs, location);
+          List docs;
+          if (isLimited) {
+            docs = controlKm(snapshot.docs, location);
+          } else {
+            docs = snapshot.docs;
+          }
           docs.sort((a, b) {
             double distanceA = Geolocator.distanceBetween(a.data()["latitude"],
                 a.data()["longitude"], location.latitude, location.longitude);

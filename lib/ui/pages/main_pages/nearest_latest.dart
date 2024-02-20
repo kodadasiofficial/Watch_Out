@@ -16,7 +16,7 @@ class _NearestLatestPageState extends State<NearestLatestPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: ReportsService().getAllReports(widget.latest),
+      future: ReportsService().getAllReports(widget.latest, isLimited: true),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Padding(

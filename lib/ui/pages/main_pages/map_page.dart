@@ -64,87 +64,13 @@ class MapPageState extends State<MapPage> {
       backgroundColor: Palette.mainPage,
       body: SingleChildScrollView(
         child: Center(
-          child: Column(
+          child: Stack(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 300,
-                    child: SearchLocation(
-                      apiKey: "AIzaSyBXb31guuYTnJ9_lK3WbHkmsi5dTV7Rk3Q",
-                      language: 'en',
-                      onSelected: _goToTheSearch,
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.filter_alt_sharp),
-                    onPressed: () {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return Wrap(
-                            children: [
-                              ListTile(
-                                title: const Text('All zones'),
-                                onTap: () {
-                                  setState(() {
-                                    filteredZones = zones;
-                                  });
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              ListTile(
-                                title: const Text('Danger Zone'),
-                                onTap: () {
-                                  setState(() {
-                                    filteredZones = zones
-                                        .where((circle) =>
-                                            circle.circleId.value ==
-                                            "DangerZone")
-                                        .toSet();
-                                  });
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              ListTile(
-                                title: const Text('Old Danger Zone'),
-                                onTap: () {
-                                  setState(() {
-                                    filteredZones = zones
-                                        .where((circle) =>
-                                            circle.circleId.value ==
-                                            "OldDangerZone")
-                                        .toSet();
-                                  });
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              ListTile(
-                                title: const Text('Aid Zone'),
-                                onTap: () {
-                                  setState(() {
-                                    filteredZones = zones
-                                        .where((circle) =>
-                                            circle.circleId.value == "AidZone")
-                                        .toSet();
-                                  });
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ],
-              ),
               Container(
                 margin: const EdgeInsets.only(
                   right: 10,
                   left: 10,
-                  top: 20,
+                  top: 70,
                 ),
                 width: 400,
                 height:
@@ -165,6 +91,90 @@ class MapPageState extends State<MapPage> {
                       position: location,
                       icon: markerIcon,
                     )
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 300,
+                      height: 300,
+                      child: SingleChildScrollView(
+                        child: SearchLocation(
+                          apiKey: "AIzaSyBXb31guuYTnJ9_lK3WbHkmsi5dTV7Rk3Q",
+                          language: 'en',
+                          onSelected: _goToTheSearch,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.only(right: 10),
+                width: MediaQuery.of(context).size.width,
+                alignment: Alignment.topRight,
+                child: IconButton(
+                  icon: const Icon(Icons.filter_alt_sharp),
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return Wrap(
+                          children: [
+                            ListTile(
+                              title: const Text('All zones'),
+                              onTap: () {
+                                setState(() {
+                                  filteredZones = zones;
+                                });
+                                Navigator.pop(context);
+                              },
+                            ),
+                            ListTile(
+                              title: const Text('Danger Zone'),
+                              onTap: () {
+                                setState(() {
+                                  filteredZones = zones
+                                      .where((circle) =>
+                                          circle.circleId.value == "DangerZone")
+                                      .toSet();
+                                });
+                                Navigator.pop(context);
+                              },
+                            ),
+                            ListTile(
+                              title: const Text('Old Danger Zone'),
+                              onTap: () {
+                                setState(() {
+                                  filteredZones = zones
+                                      .where((circle) =>
+                                          circle.circleId.value ==
+                                          "OldDangerZone")
+                                      .toSet();
+                                });
+                                Navigator.pop(context);
+                              },
+                            ),
+                            ListTile(
+                              title: const Text('Aid Zone'),
+                              onTap: () {
+                                setState(() {
+                                  filteredZones = zones
+                                      .where((circle) =>
+                                          circle.circleId.value == "AidZone")
+                                      .toSet();
+                                });
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
                 ),
               ),
