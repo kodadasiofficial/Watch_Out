@@ -155,7 +155,7 @@ class _SettingsPageState extends State<SettingsPage> {
       child: Row(
         children: [
           icon,
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Text(

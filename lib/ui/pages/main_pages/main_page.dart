@@ -4,6 +4,7 @@ import 'package:watch_out/constants/palette.dart';
 import 'package:watch_out/backend/firebase/auth.dart';
 import 'package:watch_out/ui/pages/main_pages/add_reports.dart';
 import 'package:watch_out/ui/pages/main_pages/home_page.dart';
+import 'package:watch_out/ui/pages/main_pages/map_page.dart';
 import 'package:watch_out/ui/pages/main_pages/profile.dart';
 import 'package:watch_out/ui/pages/main_pages/reports.dart';
 
@@ -33,7 +34,7 @@ class _MainPageState extends State<MainPage> {
       HomePage(
         navigationBarKey: navigationBarKey,
       ),
-      Container(),
+      const MapPage(),
       const AddReport(),
       const ReportsPage(),
       const ProfilePage(),

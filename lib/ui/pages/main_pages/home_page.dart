@@ -5,6 +5,7 @@ import 'package:watch_out/backend/firebase/reports_data.dart';
 import 'package:watch_out/backend/services/location_service.dart';
 import 'package:watch_out/constants/fonts.dart';
 import 'package:watch_out/constants/palette.dart';
+import 'package:watch_out/models/report.dart';
 import 'package:watch_out/ui/widgets/custom_map.dart';
 import 'package:watch_out/ui/widgets/near_report_card.dart';
 
@@ -24,7 +25,11 @@ class _HomePageState extends State<HomePage> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data != null) {
-            return locationEnabledWidget(snapshot.data![0], snapshot.data![1]);
+            return locationEnabledWidget(
+              snapshot.data![0],
+              snapshot.data![1],
+              snapshot.data![2],
+            );
           } else {
             return locationDisabledWidget();
           }
@@ -54,10 +59,47 @@ class _HomePageState extends State<HomePage> {
     snapshot.add(location);
     List reports = await ReportsService().getAllReports(false);
     snapshot.add(reports);
+    Set<Circle> zones = {};
+    for (dynamic i in reports) {
+      Report report = Report.fromMap(i.data());
+      int difference = DateTime.now().difference(report.createdAt).inHours;
+      Color fillColor;
+      String id;
+      if (report.reportType == "Danger Zone") {
+        if (difference > 12) {
+          id = "OldDangerZone";
+          fillColor = Colors.grey.withOpacity(0.5);
+        } else {
+          id = "DangerZone";
+          fillColor = Colors.red.withOpacity(0.5);
+        }
+      } else {
+        if (difference > 12) {
+          continue;
+        } else {
+          id = "AidZone";
+          fillColor = Colors.yellow.withOpacity(0.5);
+        }
+      }
+      zones.add(
+        Circle(
+          circleId: CircleId(id),
+          center: LatLng(report.latitude, report.longitude),
+          radius: 420,
+          strokeWidth: 2,
+          fillColor: fillColor,
+        ),
+      );
+    }
+    snapshot.add(zones);
     return snapshot;
   }
 
-  Widget locationEnabledWidget(LatLng location, List reports) {
+  Widget locationEnabledWidget(
+    LatLng location,
+    List reports,
+    Set<Circle> zones,
+  ) {
     BottomNavigationBar navigationBar =
         widget.navigationBarKey.currentWidget as BottomNavigationBar;
     return Scaffold(
@@ -72,6 +114,9 @@ class _HomePageState extends State<HomePage> {
                 horizontal: 15,
                 vertical: 0,
               ),
+              enableTap: true,
+              zones: zones,
+              zoom: 14,
             ),
             Container(
               margin: const EdgeInsets.only(top: 20),
@@ -121,6 +166,9 @@ class _HomePageState extends State<HomePage> {
                 bottom: 10,
                 top: 0,
               ),
+              enableTap: true,
+              zones: zones,
+              zoom: 14,
             ),
           ],
         ),

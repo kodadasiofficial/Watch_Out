@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:watch_out/constants/fonts.dart';
 import 'package:watch_out/constants/palette.dart';
 import 'package:watch_out/backend/firebase/reports_data.dart';
@@ -156,7 +157,10 @@ class _ReportWidgetState extends State<ReportWidget> {
                     ),
                   ),
                   CustomButton(
-                    onPressed: () {},
+                    onPressed: () => MapsLauncher.launchCoordinates(
+                      widget.report.latitude,
+                      widget.report.longitude,
+                    ),
                     text: "View on map",
                     height: 1,
                     width: 120,

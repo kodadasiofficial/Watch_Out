@@ -9,6 +9,9 @@ class CustomMap extends StatelessWidget {
   final LatLng location;
   final EdgeInsetsGeometry padding;
   final double height;
+  final bool enableTap;
+  final Set<Circle> zones;
+  final double zoom;
   CustomMap({
     super.key,
     required this.location,
@@ -17,7 +20,11 @@ class CustomMap extends StatelessWidget {
       vertical: 10,
     ),
     this.height = 200,
+    this.enableTap = false,
+    this.zones = const {},
+    this.zoom = 12,
   });
+  BitmapDescriptor markerIcon = BitmapDescriptor.defaultMarker;
 
   @override
   Widget build(BuildContext context) {
@@ -28,20 +35,27 @@ class CustomMap extends StatelessWidget {
         width: MediaQuery.of(context).size.width - 20,
         child: GoogleMap(
           compassEnabled: false,
-          mapToolbarEnabled: false,
-          rotateGesturesEnabled: false,
-          scrollGesturesEnabled: false,
-          myLocationEnabled: true,
-          myLocationButtonEnabled: false,
-          zoomControlsEnabled: false,
-          zoomGesturesEnabled: false,
-          mapType: MapType.normal,
+          mapToolbarEnabled: enableTap,
+          rotateGesturesEnabled: enableTap,
+          scrollGesturesEnabled: enableTap,
+          myLocationButtonEnabled: enableTap,
+          zoomControlsEnabled: enableTap,
+          zoomGesturesEnabled: enableTap,
+          mapType: MapType.terrain,
           initialCameraPosition: CameraPosition(
             target: location,
-            zoom: 12,
+            zoom: zoom,
           ),
           onMapCreated: (GoogleMapController controller) {
             _controller.complete(controller);
+          },
+          circles: zones,
+          markers: {
+            Marker(
+              markerId: const MarkerId("1"),
+              position: location,
+              icon: markerIcon,
+            )
           },
         ),
       ),
