@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:maps_launcher/maps_launcher.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:watch_out/constants/fonts.dart';
 import 'package:watch_out/constants/palette.dart';
 import 'package:watch_out/backend/firebase/reports_data.dart';
@@ -156,22 +159,47 @@ class _ReportWidgetState extends State<ReportWidget> {
                       child: Text(widget.report.description),
                     ),
                   ),
-                  CustomButton(
-                    onPressed: () => MapsLauncher.launchCoordinates(
-                      widget.report.latitude,
-                      widget.report.longitude,
-                    ),
-                    text: "View on map",
-                    height: 1,
-                    width: 120,
-                    borderRadius: 30,
-                    alignment: Alignment.topLeft,
-                    padding: const EdgeInsets.only(top: 10),
-                    textStyle: TextStyle(
-                      color: Palette.darkGreen,
-                      fontSize: 12,
-                    ),
-                    color: Palette.mainPage,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomButton(
+                        onPressed: () => MapsLauncher.launchCoordinates(
+                          widget.report.latitude,
+                          widget.report.longitude,
+                        ),
+                        text: "View on map",
+                        height: 1,
+                        width: 120,
+                        borderRadius: 30,
+                        alignment: Alignment.topLeft,
+                        padding: const EdgeInsets.only(top: 10),
+                        textStyle: TextStyle(
+                          color: Palette.darkGreen,
+                          fontSize: 12,
+                        ),
+                        color: Palette.mainPage,
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          String link;
+                          if (Platform.isIOS) {
+                            link =
+                                'https://maps.apple.com/?sll=${widget.report.latitude},${widget.report.longitude}';
+                          } else {
+                            link =
+                                "https://www.google.com/maps/search/?api=1&query=${widget.report.latitude},${widget.report.longitude}";
+                          }
+                          Share.share(
+                            "There is an ${widget.report.reportType}. Be careful!. \n\nReport Head: ${widget.report.reportHead}\nReport Description: ${widget.report.description}\n\nYou can reach this zone with link below\n\n$link",
+                            subject: "${widget.report.reportType} Report",
+                          );
+                        },
+                        icon: Icon(
+                          Icons.share,
+                          color: Palette.darkGreen,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:watch_out/constants/fonts.dart';
 import 'package:watch_out/constants/palette.dart';
-import 'package:watch_out/backend/firebase/auth.dart';
 import 'package:watch_out/ui/pages/main_pages/add_reports.dart';
 import 'package:watch_out/ui/pages/main_pages/home_page.dart';
 import 'package:watch_out/ui/pages/main_pages/map_page.dart';
@@ -50,9 +49,7 @@ class _MainPageState extends State<MainPage> {
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          onPressed: () {
-            AuthService().signOut(context);
-          },
+          onPressed: () {},
           icon: Icon(
             Icons.notifications,
             color: Palette.darkGreen,

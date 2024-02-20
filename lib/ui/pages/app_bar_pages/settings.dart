@@ -172,8 +172,8 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget subCategories(List<Widget> children) {
     return Container(
       width: MediaQuery.of(context).size.width - 40,
-      padding: EdgeInsets.only(left: 20, top: 10),
-      margin: EdgeInsets.only(left: 15),
+      padding: const EdgeInsets.only(left: 20, top: 10),
+      margin: const EdgeInsets.only(left: 15),
       alignment: Alignment.topLeft,
       decoration: BoxDecoration(
         color: Palette.mainLightGreen,

@@ -104,7 +104,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
               left: 15,
               top: 10,
               bottom: 10,
@@ -120,8 +120,8 @@ class _ProfilePageState extends State<ProfilePage> {
           Container(
             height: 250,
             width: MediaQuery.of(context).size.width - 40,
-            padding: EdgeInsets.only(left: 20, top: 10),
-            margin: EdgeInsets.only(left: 15),
+            padding: const EdgeInsets.only(left: 20, top: 10),
+            margin: const EdgeInsets.only(left: 15),
             alignment: Alignment.topLeft,
             decoration: BoxDecoration(
               color: Palette.mainLightGreen,
@@ -140,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
             onPressed: () {},
             text: "Edit Profile",
             width: MediaQuery.of(context).size.width - 40,
-            padding: EdgeInsets.only(top: 10),
+            padding: const EdgeInsets.only(top: 10),
             height: 10,
             borderRadius: 10,
           ),
@@ -166,7 +166,7 @@ class _ProfilePageState extends State<ProfilePage> {
             fontSize: 12,
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
       ],

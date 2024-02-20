@@ -19,11 +19,6 @@ class MapPage extends StatefulWidget {
 class MapPageState extends State<MapPage> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
-
-  static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(40.874690794229, 35.21581770755382),
-    zoom: 14.4746,
-  );
   Set<Circle> zones = {};
   late Set<Circle> filteredZones = zones;
   BitmapDescriptor markerIcon = BitmapDescriptor.defaultMarker;
@@ -83,7 +78,7 @@ class MapPageState extends State<MapPage> {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.filter_alt_sharp),
+                    icon: const Icon(Icons.filter_alt_sharp),
                     onPressed: () {
                       showModalBottomSheet(
                         context: context,
@@ -91,7 +86,7 @@ class MapPageState extends State<MapPage> {
                           return Wrap(
                             children: [
                               ListTile(
-                                title: Text('All zones'),
+                                title: const Text('All zones'),
                                 onTap: () {
                                   setState(() {
                                     filteredZones = zones;
@@ -100,7 +95,7 @@ class MapPageState extends State<MapPage> {
                                 },
                               ),
                               ListTile(
-                                title: Text('Danger Zone'),
+                                title: const Text('Danger Zone'),
                                 onTap: () {
                                   setState(() {
                                     filteredZones = zones
@@ -113,7 +108,7 @@ class MapPageState extends State<MapPage> {
                                 },
                               ),
                               ListTile(
-                                title: Text('Old Danger Zone'),
+                                title: const Text('Old Danger Zone'),
                                 onTap: () {
                                   setState(() {
                                     filteredZones = zones
@@ -126,7 +121,7 @@ class MapPageState extends State<MapPage> {
                                 },
                               ),
                               ListTile(
-                                title: Text('Aid Zone'),
+                                title: const Text('Aid Zone'),
                                 onTap: () {
                                   setState(() {
                                     filteredZones = zones
@@ -254,18 +249,6 @@ class MapPageSettingsState extends State<MapPageSettings> {
         child: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                    onPressed: () => null, icon: Icon(Icons.notifications)),
-                Text(
-                  "Map",
-                  style: TextStyle(fontSize: 30),
-                ),
-                IconButton(onPressed: () => null, icon: Icon(Icons.settings)),
-              ],
-            ),
-            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
@@ -276,17 +259,19 @@ class MapPageSettingsState extends State<MapPageSettings> {
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Colors.transparent),
+                          borderSide:
+                              const BorderSide(color: Colors.transparent),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Colors.transparent),
+                          borderSide:
+                              const BorderSide(color: Colors.transparent),
                         ),
                         hintText: "search location"),
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.filter_alt_sharp),
+                  icon: const Icon(Icons.filter_alt_sharp),
                   onPressed: () {
                     Navigator.pop(context);
                   },

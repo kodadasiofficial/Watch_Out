@@ -24,7 +24,7 @@ class CustomMap extends StatelessWidget {
     this.zones = const {},
     this.zoom = 12,
   });
-  BitmapDescriptor markerIcon = BitmapDescriptor.defaultMarker;
+  final BitmapDescriptor markerIcon = BitmapDescriptor.defaultMarker;
 
   @override
   Widget build(BuildContext context) {
