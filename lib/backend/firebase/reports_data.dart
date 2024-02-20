@@ -58,22 +58,25 @@ class ReportsService {
   }
 
   Future<List> getAllReports(bool latest) async {
+    LatLng? location = await LocationService().getLocation();
     if (latest) {
       try {
         var snapshot =
             await _reportRef.orderBy("created_at", descending: true).get();
+        if (location != null) {
+          return controlKm(snapshot.docs, location);
+        }
         return snapshot.docs;
       } catch (e) {
         throw Error();
       }
     } else {
       try {
-        LatLng? location = await LocationService().getLocation();
         if (location == null) {
           throw Error();
         } else {
           var snapshot = await _reportRef.get();
-          List docs = snapshot.docs;
+          List docs = controlKm(snapshot.docs, location);
           docs.sort((a, b) {
             double distanceA = Geolocator.distanceBetween(a.data()["latitude"],
                 a.data()["longitude"], location.latitude, location.longitude);
@@ -87,6 +90,19 @@ class ReportsService {
         throw Error();
       }
     }
+  }
+
+  List controlKm(List docs, LatLng location) {
+    List newDocs = [];
+    for (dynamic i in docs) {
+      Report report = Report.fromMap(i.data());
+      double distance = Geolocator.distanceBetween(location.latitude,
+          location.longitude, report.latitude, report.longitude);
+      if (distance < 3000) {
+        newDocs.add(i);
+      }
+    }
+    return newDocs;
   }
 
   Future<void> updateLike(BuildContext context, String id, int like) async {

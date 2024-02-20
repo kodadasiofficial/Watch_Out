@@ -75,7 +75,19 @@ class _AddReportState extends State<AddReport> {
                     ),
                   ),
                 ),
-                CustomMap(location: location),
+                CustomMap(
+                  location: location,
+                  zones: {
+                    Circle(
+                      circleId: const CircleId("Add Zone"),
+                      center: location,
+                      radius: 420,
+                      strokeWidth: 2,
+                      fillColor: Palette.mainPageTitle.withOpacity(0.5),
+                    ),
+                  },
+                  zoom: 14,
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
