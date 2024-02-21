@@ -12,6 +12,7 @@ class CustomMap extends StatelessWidget {
   final bool enableTap;
   final Set<Circle> zones;
   final double zoom;
+  final bool safeZone;
   CustomMap({
     super.key,
     required this.location,
@@ -23,6 +24,7 @@ class CustomMap extends StatelessWidget {
     this.enableTap = false,
     this.zones = const {},
     this.zoom = 12,
+    this.safeZone = false,
   });
   final BitmapDescriptor markerIcon = BitmapDescriptor.defaultMarker;
 
@@ -41,6 +43,7 @@ class CustomMap extends StatelessWidget {
           myLocationButtonEnabled: enableTap,
           zoomControlsEnabled: enableTap,
           zoomGesturesEnabled: enableTap,
+          myLocationEnabled: safeZone,
           mapType: MapType.terrain,
           initialCameraPosition: CameraPosition(
             target: location,
@@ -55,7 +58,7 @@ class CustomMap extends StatelessWidget {
               markerId: const MarkerId("1"),
               position: location,
               icon: markerIcon,
-            )
+            ),
           },
         ),
       ),

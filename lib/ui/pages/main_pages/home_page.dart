@@ -1,6 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:watch_out/backend/firebase/reports_data.dart';
 import 'package:watch_out/backend/services/location_service.dart';
 import 'package:watch_out/constants/fonts.dart';
@@ -102,6 +104,10 @@ class _HomePageState extends State<HomePage> {
   ) {
     BottomNavigationBar navigationBar =
         widget.navigationBarKey.currentWidget as BottomNavigationBar;
+    List closestSafeZone = findClosestSafeZone(location, zones);
+    Set<Circle> safeZones =
+        zones.where((circle) => circle.circleId.value == "DangerZone").toSet();
+    safeZones.add(closestSafeZone[0]);
     return Scaffold(
       backgroundColor: Palette.mainPage,
       body: SingleChildScrollView(
@@ -156,9 +162,16 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(
               height: 10,
             ),
-            text("Closest Safe Zone", "Go This Zone", () {}),
+            text(
+              "Closest Safe Zone",
+              "Go This Zone",
+              () => MapsLauncher.launchCoordinates(
+                closestSafeZone[1].latitude,
+                closestSafeZone[1].longitude,
+              ),
+            ),
             CustomMap(
-              location: location,
+              location: closestSafeZone[1],
               height: 150,
               padding: const EdgeInsets.only(
                 left: 15,
@@ -167,8 +180,9 @@ class _HomePageState extends State<HomePage> {
                 top: 0,
               ),
               enableTap: true,
-              zones: zones,
+              zones: safeZones,
               zoom: 14,
+              safeZone: true,
             ),
           ],
         ),
@@ -215,5 +229,42 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  List findClosestSafeZone(LatLng location, Set<Circle> zones) {
+    Set<Circle> dangerZones =
+        zones.where((circle) => circle.circleId.value == "DangerZone").toSet();
+    LatLng newLoc = location;
+    while (true) {
+      int counter = 0;
+      for (Circle i in dangerZones) {
+        double distance = Geolocator.distanceBetween(
+          i.center.latitude,
+          i.center.longitude,
+          newLoc.latitude,
+          newLoc.longitude,
+        );
+        if (distance < 300) {
+          break;
+        } else {
+          counter++;
+        }
+      }
+      if (counter == dangerZones.length) {
+        List res = [];
+        res.add(
+          Circle(
+            circleId: const CircleId("Safe Zone"),
+            center: LatLng(newLoc.latitude + 0.003, newLoc.longitude + 0.003),
+            radius: 420,
+            strokeWidth: 2,
+            fillColor: Palette.lightGreen.withOpacity(0.5),
+          ),
+        );
+        res.add(LatLng(newLoc.latitude + 0.003, newLoc.longitude + 0.003));
+        return res;
+      }
+      newLoc = LatLng(newLoc.latitude + 0.001, newLoc.longitude + 0.001);
+    }
   }
 }
