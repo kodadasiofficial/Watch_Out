@@ -1,17 +1,27 @@
 # watch_out
 
-A new Flutter project.
+A new Flutter project to minimize civilian casualties.
 
-## Getting Started
+## Installation
 
-This project is a starting point for a Flutter application.
+This installation guide assumes that you already have Flutter installed on your computer if not install Flutter here.
 
-A few resources to get you started if this is your first Flutter project:
+Open Watch_Out project on GitHub.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Step 1: Click the Code button and then click Download ZIP.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-selam
+Step 2: After downloading the zip file, extract the project.
+
+Step 3: Go to your code editor and open the folder.
+
+Step 4: Run 
+```
+pub get
+``` 
+command in the terminal.
+
+Step 5: Under the lib folder open the main.dart file and run the app.
+
+## Project Aim
+
+Let users create and vote on the safety level of a coordination to provide useful information
