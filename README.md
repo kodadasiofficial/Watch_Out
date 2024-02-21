@@ -25,7 +25,3 @@ Step 5: Under the lib folder open the main.dart file and run the app.
 ## Project Aim
 
 Let users create and vote on the safety level of a coordination to provide useful information
-
-
-## License
-[MIT](https://choosealicense.com/licenses/mit/)
