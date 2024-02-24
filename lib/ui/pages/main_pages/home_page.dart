@@ -1,13 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:watch_out/backend/firebase/reports_data.dart';
 import 'package:watch_out/backend/services/location_service.dart';
+import 'package:watch_out/backend/services/zone_services.dart';
 import 'package:watch_out/constants/fonts.dart';
 import 'package:watch_out/constants/palette.dart';
-import 'package:watch_out/models/report.dart';
 import 'package:watch_out/ui/widgets/custom_map.dart';
 import 'package:watch_out/ui/widgets/near_report_card.dart';
 
@@ -28,9 +27,9 @@ class _HomePageState extends State<HomePage> {
         if (snapshot.hasData) {
           if (snapshot.data != null) {
             return locationEnabledWidget(
-              snapshot.data![0],
-              snapshot.data![1],
-              snapshot.data![2],
+              snapshot.data!["location"],
+              snapshot.data!["reports"],
+              snapshot.data!["zones"],
             );
           } else {
             return locationDisabledWidget();
@@ -55,45 +54,13 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<List> getInfos() async {
-    List snapshot = [];
+  Future<Map<String, dynamic>> getInfos() async {
+    Map<String, dynamic> snapshot = {};
     LatLng? location = await LocationService().getLocation();
-    snapshot.add(location);
-    List reports = await ReportsService().getAllReports(false);
-    snapshot.add(reports);
-    Set<Circle> zones = {};
-    for (dynamic i in reports) {
-      Report report = Report.fromMap(i.data());
-      int difference = DateTime.now().difference(report.createdAt).inHours;
-      Color fillColor;
-      String id;
-      if (report.reportType == "Danger Zone") {
-        if (difference > 12) {
-          id = "OldDangerZone";
-          fillColor = Colors.grey.withOpacity(0.5);
-        } else {
-          id = "DangerZone";
-          fillColor = Colors.red.withOpacity(0.5);
-        }
-      } else {
-        if (difference > 12) {
-          continue;
-        } else {
-          id = "AidZone";
-          fillColor = Colors.yellow.withOpacity(0.5);
-        }
-      }
-      zones.add(
-        Circle(
-          circleId: CircleId(id),
-          center: LatLng(report.latitude, report.longitude),
-          radius: 420,
-          strokeWidth: 2,
-          fillColor: fillColor,
-        ),
-      );
-    }
-    snapshot.add(zones);
+    snapshot["location"] = location;
+    List reports = await ReportsService().getAllReports(false, isLimited: true);
+    snapshot["reports"] = reports;
+    snapshot["zones"] = ZoneService().getZones(reports);
     return snapshot;
   }
 
@@ -104,10 +71,11 @@ class _HomePageState extends State<HomePage> {
   ) {
     BottomNavigationBar navigationBar =
         widget.navigationBarKey.currentWidget as BottomNavigationBar;
-    List closestSafeZone = findClosestSafeZone(location, zones);
-    Set<Circle> safeZones =
+    Map<String, dynamic> closestSafeZone =
+        ZoneService().findClosestSafeZone(location, zones);
+    Set<Circle> showZones =
         zones.where((circle) => circle.circleId.value == "DangerZone").toSet();
-    safeZones.add(closestSafeZone[0]);
+    showZones.add(closestSafeZone["safeZone"]);
     return Scaffold(
       backgroundColor: Palette.mainPage,
       body: SingleChildScrollView(
@@ -153,12 +121,21 @@ class _HomePageState extends State<HomePage> {
               height: 10,
             ),
             text("Near Reports", "View More", () => navigationBar.onTap!(3)),
-            Row(
-              children: [
-                NearReportCard(data: reports[0].data()),
-                NearReportCard(data: reports[1].data()),
-              ],
-            ),
+            reports.isNotEmpty
+                ? SizedBox(
+                    height: 100,
+                    child: ListView.builder(
+                      itemCount: reports.length,
+                      itemBuilder: (context, index) =>
+                          NearReportCard(data: reports[index].data()),
+                      scrollDirection: Axis.horizontal,
+                    ),
+                  )
+                : Container(
+                    height: 100,
+                    alignment: Alignment.center,
+                    child: const Text("There is no report near your location"),
+                  ),
             const SizedBox(
               height: 10,
             ),
@@ -166,12 +143,12 @@ class _HomePageState extends State<HomePage> {
               "Closest Safe Zone",
               "Go This Zone",
               () => MapsLauncher.launchCoordinates(
-                closestSafeZone[1].latitude,
-                closestSafeZone[1].longitude,
+                closestSafeZone["centerLocation"].latitude,
+                closestSafeZone["centerLocation"].longitude,
               ),
             ),
             CustomMap(
-              location: closestSafeZone[1],
+              location: closestSafeZone["centerLocation"],
               height: 150,
               padding: const EdgeInsets.only(
                 left: 15,
@@ -180,7 +157,7 @@ class _HomePageState extends State<HomePage> {
                 top: 0,
               ),
               enableTap: true,
-              zones: safeZones,
+              zones: showZones,
               zoom: 14,
               safeZone: true,
             ),
@@ -229,42 +206,5 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
-  }
-
-  List findClosestSafeZone(LatLng location, Set<Circle> zones) {
-    Set<Circle> dangerZones =
-        zones.where((circle) => circle.circleId.value == "DangerZone").toSet();
-    LatLng newLoc = location;
-    while (true) {
-      int counter = 0;
-      for (Circle i in dangerZones) {
-        double distance = Geolocator.distanceBetween(
-          i.center.latitude,
-          i.center.longitude,
-          newLoc.latitude,
-          newLoc.longitude,
-        );
-        if (distance < 300) {
-          break;
-        } else {
-          counter++;
-        }
-      }
-      if (counter == dangerZones.length) {
-        List res = [];
-        res.add(
-          Circle(
-            circleId: const CircleId("Safe Zone"),
-            center: LatLng(newLoc.latitude + 0.003, newLoc.longitude + 0.003),
-            radius: 420,
-            strokeWidth: 2,
-            fillColor: Palette.lightGreen.withOpacity(0.5),
-          ),
-        );
-        res.add(LatLng(newLoc.latitude + 0.003, newLoc.longitude + 0.003));
-        return res;
-      }
-      newLoc = LatLng(newLoc.latitude + 0.001, newLoc.longitude + 0.001);
-    }
   }
 }

@@ -19,22 +19,29 @@ class _NearestLatestPageState extends State<NearestLatestPage> {
       future: ReportsService().getAllReports(widget.latest, isLimited: true),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return Padding(
-            padding: const EdgeInsets.only(
-              right: 10,
-              left: 10,
-              top: 30,
-            ),
-            child: ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: ((context, index) {
-                Report data = Report.fromMap(snapshot.data![index].data());
-                return ReportWidget(
-                  report: data,
-                );
-              }),
-            ),
-          );
+          if (snapshot.data!.isNotEmpty) {
+            return Padding(
+              padding: const EdgeInsets.only(
+                right: 10,
+                left: 10,
+                top: 30,
+              ),
+              child: ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: ((context, index) {
+                  Report data = Report.fromMap(snapshot.data![index].data());
+                  return ReportWidget(
+                    report: data,
+                  );
+                }),
+              ),
+            );
+          } else {
+            return Container(
+              alignment: Alignment.center,
+              child: const Text("There is no report near your location"),
+            );
+          }
         } else if (snapshot.hasError) {
           return const Center(
             child: Text("Something went wrong. Please try again"),

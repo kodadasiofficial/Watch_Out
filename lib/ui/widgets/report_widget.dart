@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:watch_out/backend/firebase/auth.dart';
 import 'package:watch_out/constants/fonts.dart';
 import 'package:watch_out/constants/palette.dart';
 import 'package:watch_out/backend/firebase/reports_data.dart';
@@ -27,6 +29,7 @@ class _ReportWidgetState extends State<ReportWidget> {
   bool likeState = false;
   bool dislikeState = false;
   DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm");
+  User? user = AuthService().getCurrentUser();
 
   @override
   void initState() {
@@ -38,7 +41,7 @@ class _ReportWidgetState extends State<ReportWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: (MediaQuery.of(context).size.height / 2) - 150,
+      height: 250,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Palette.lightGreen,
@@ -48,21 +51,24 @@ class _ReportWidgetState extends State<ReportWidget> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-            child: Column(
-              children: [
-                CircleAvatar(
-                  child: widget.report.reporterProfilePhoto == ""
-                      ? const Icon(Icons.person)
-                      : Image.network(widget.report.reporterProfilePhoto),
-                ),
-                Text(
-                  widget.report.reporterName,
-                  style: TextStyle(
-                    fontSize: Font.createAccountFontSize,
-                    color: Palette.darkGreen,
+            child: SizedBox(
+              width: 80,
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    child: widget.report.reporterProfilePhoto == ""
+                        ? const Icon(Icons.person)
+                        : Image.network(widget.report.reporterProfilePhoto),
                   ),
-                ),
-              ],
+                  Text(
+                    widget.report.reporterName,
+                    style: TextStyle(
+                      fontSize: Font.createAccountFontSize,
+                      color: Palette.darkGreen,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           Expanded(
