@@ -1,12 +1,21 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:watch_out/backend/firebase/auth.dart';
 import 'package:watch_out/backend/firebase/reports_data.dart';
 import 'package:watch_out/constants/palette.dart';
 import 'package:watch_out/models/report.dart';
 
 class NearReportCard extends StatefulWidget {
   final Map<String, dynamic> data;
-  const NearReportCard({super.key, required this.data});
+  final bool likeState;
+  final bool dislikeState;
+  const NearReportCard({
+    super.key,
+    required this.data,
+    required this.likeState,
+    required this.dislikeState,
+  });
 
   @override
   State<NearReportCard> createState() => _NearReportCardState();
@@ -18,12 +27,15 @@ class _NearReportCardState extends State<NearReportCard> {
   late int dislike;
   bool likeState = false;
   bool dislikeState = false;
+  User? user = AuthService().getCurrentUser();
 
   @override
   void initState() {
     report = Report.fromMap(widget.data);
     like = report.like;
     dislike = report.dislike;
+    likeState = widget.likeState;
+    dislikeState = widget.dislikeState;
     super.initState();
   }
 
@@ -73,16 +85,38 @@ class _NearReportCardState extends State<NearReportCard> {
             Row(
               children: [
                 IconButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (!likeState) {
-                      ReportsService().updateLike(context, report.id, like + 1);
+                      ReportsService().updateLike(
+                        context,
+                        report.id,
+                        like + 1,
+                        user!.email!,
+                        true,
+                      );
+                      if (dislikeState) {
+                        ReportsService().updateDislike(
+                          context,
+                          report.id,
+                          dislike - 1,
+                          user!.email!,
+                          false,
+                        );
+                        dislike -= 1;
+                        dislikeState = false;
+                      }
                       setState(() {
                         like += 1;
                         likeState = true;
-                        dislikeState = false;
                       });
                     } else {
-                      ReportsService().updateLike(context, report.id, like - 1);
+                      ReportsService().updateLike(
+                        context,
+                        report.id,
+                        like - 1,
+                        user!.email!,
+                        false,
+                      );
                       setState(() {
                         like -= 1;
                         likeState = false;
@@ -95,18 +129,38 @@ class _NearReportCardState extends State<NearReportCard> {
                 ),
                 Text(like.toString()),
                 IconButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (!dislikeState) {
-                      ReportsService()
-                          .updateDislike(context, report.id, dislike + 1);
+                      ReportsService().updateDislike(
+                        context,
+                        report.id,
+                        dislike + 1,
+                        user!.email!,
+                        true,
+                      );
+                      if (likeState) {
+                        ReportsService().updateLike(
+                          context,
+                          report.id,
+                          like - 1,
+                          user!.email!,
+                          false,
+                        );
+                        like -= 1;
+                        likeState = false;
+                      }
                       setState(() {
                         dislike += 1;
-                        likeState = false;
                         dislikeState = true;
                       });
                     } else {
-                      ReportsService()
-                          .updateDislike(context, report.id, dislike - 1);
+                      ReportsService().updateDislike(
+                        context,
+                        report.id,
+                        dislike - 1,
+                        user!.email!,
+                        false,
+                      );
                       setState(() {
                         dislike -= 1;
                         dislikeState = false;

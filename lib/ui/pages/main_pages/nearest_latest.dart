@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:watch_out/backend/firebase/auth.dart';
 import 'package:watch_out/constants/palette.dart';
 import 'package:watch_out/backend/firebase/reports_data.dart';
 import 'package:watch_out/models/report.dart';
@@ -13,10 +15,11 @@ class NearestLatestPage extends StatefulWidget {
 }
 
 class _NearestLatestPageState extends State<NearestLatestPage> {
+  User? user = AuthService().getCurrentUser();
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: ReportsService().getAllReports(widget.latest, isLimited: true),
+      future: getInfos(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data!.isNotEmpty) {
@@ -27,11 +30,14 @@ class _NearestLatestPageState extends State<NearestLatestPage> {
                 top: 30,
               ),
               child: ListView.builder(
-                itemCount: snapshot.data!.length,
+                itemCount: snapshot.data!["reports"].length,
                 itemBuilder: ((context, index) {
-                  Report data = Report.fromMap(snapshot.data![index].data());
+                  Report data =
+                      Report.fromMap(snapshot.data!["reports"][index].data());
                   return ReportWidget(
                     report: data,
+                    likeState: snapshot.data!["likeState"][index],
+                    dislikeState: snapshot.data!["dislikeState"][index],
                   );
                 }),
               ),
@@ -56,5 +62,23 @@ class _NearestLatestPageState extends State<NearestLatestPage> {
         }
       },
     );
+  }
+
+  Future<Map<String, dynamic>> getInfos() async {
+    Map<String, dynamic> res = {};
+    var reports =
+        await ReportsService().getAllReports(widget.latest, isLimited: true);
+    List likeState = [];
+    List dislikeState = [];
+    for (dynamic i in reports) {
+      likeState.add(
+          await ReportsService().controlLiked(i.data()["id"], user!.email!));
+      dislikeState.add(
+          await ReportsService().controlDisliked(i.data()["id"], user!.email!));
+    }
+    res["reports"] = reports;
+    res["likeState"] = likeState;
+    res["dislikeState"] = dislikeState;
+    return res;
   }
 }

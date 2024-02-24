@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_launcher/maps_launcher.dart';
+import 'package:watch_out/backend/firebase/auth.dart';
 import 'package:watch_out/backend/firebase/reports_data.dart';
 import 'package:watch_out/backend/services/location_service.dart';
 import 'package:watch_out/backend/services/zone_services.dart';
@@ -19,6 +21,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  User? user = AuthService().getCurrentUser();
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -29,6 +32,8 @@ class _HomePageState extends State<HomePage> {
             return locationEnabledWidget(
               snapshot.data!["location"],
               snapshot.data!["reports"],
+              snapshot.data!["likeState"],
+              snapshot.data!["dislikeState"],
               snapshot.data!["zones"],
             );
           } else {
@@ -61,12 +66,24 @@ class _HomePageState extends State<HomePage> {
     List reports = await ReportsService().getAllReports(false, isLimited: true);
     snapshot["reports"] = reports;
     snapshot["zones"] = ZoneService().getZones(reports);
+    List likeState = [];
+    List dislikeState = [];
+    for (dynamic i in reports) {
+      likeState.add(
+          await ReportsService().controlLiked(i.data()["id"], user!.email!));
+      dislikeState.add(
+          await ReportsService().controlDisliked(i.data()["id"], user!.email!));
+    }
+    snapshot["likeState"] = likeState;
+    snapshot["dislikeState"] = dislikeState;
     return snapshot;
   }
 
   Widget locationEnabledWidget(
     LatLng location,
     List reports,
+    List likeStates,
+    List dislikeStates,
     Set<Circle> zones,
   ) {
     BottomNavigationBar navigationBar =
@@ -126,8 +143,11 @@ class _HomePageState extends State<HomePage> {
                     height: 100,
                     child: ListView.builder(
                       itemCount: reports.length,
-                      itemBuilder: (context, index) =>
-                          NearReportCard(data: reports[index].data()),
+                      itemBuilder: (context, index) => NearReportCard(
+                        data: reports[index].data(),
+                        likeState: likeStates[index],
+                        dislikeState: dislikeStates[index],
+                      ),
                       scrollDirection: Axis.horizontal,
                     ),
                   )

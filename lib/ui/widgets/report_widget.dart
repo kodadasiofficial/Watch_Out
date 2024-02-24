@@ -14,9 +14,13 @@ import 'package:watch_out/ui/widgets/custom_button.dart';
 
 class ReportWidget extends StatefulWidget {
   final Report report;
+  final bool likeState;
+  final bool dislikeState;
   const ReportWidget({
     super.key,
     required this.report,
+    required this.likeState,
+    required this.dislikeState,
   });
 
   @override
@@ -35,6 +39,8 @@ class _ReportWidgetState extends State<ReportWidget> {
   void initState() {
     like = widget.report.like;
     dislike = widget.report.dislike;
+    likeState = widget.likeState;
+    dislikeState = widget.dislikeState;
     super.initState();
   }
 
@@ -107,7 +113,23 @@ class _ReportWidgetState extends State<ReportWidget> {
                         onPressed: () {
                           if (!likeState) {
                             ReportsService().updateLike(
-                                context, widget.report.id, like + 1);
+                              context,
+                              widget.report.id,
+                              like + 1,
+                              user!.email!,
+                              true,
+                            );
+                            if (dislikeState) {
+                              ReportsService().updateDislike(
+                                context,
+                                widget.report.id,
+                                dislike - 1,
+                                user!.email!,
+                                false,
+                              );
+                              dislike -= 1;
+                              dislikeState = false;
+                            }
                             setState(() {
                               like += 1;
                               likeState = true;
@@ -115,7 +137,12 @@ class _ReportWidgetState extends State<ReportWidget> {
                             });
                           } else {
                             ReportsService().updateLike(
-                                context, widget.report.id, like - 1);
+                              context,
+                              widget.report.id,
+                              like - 1,
+                              user!.email!,
+                              false,
+                            );
                             setState(() {
                               like -= 1;
                               likeState = false;
@@ -131,7 +158,23 @@ class _ReportWidgetState extends State<ReportWidget> {
                         onPressed: () {
                           if (!dislikeState) {
                             ReportsService().updateDislike(
-                                context, widget.report.id, dislike + 1);
+                              context,
+                              widget.report.id,
+                              dislike + 1,
+                              user!.email!,
+                              true,
+                            );
+                            if (likeState) {
+                              ReportsService().updateLike(
+                                context,
+                                widget.report.id,
+                                like - 1,
+                                user!.email!,
+                                false,
+                              );
+                              like -= 1;
+                              likeState = false;
+                            }
                             setState(() {
                               dislike += 1;
                               likeState = false;
@@ -139,7 +182,12 @@ class _ReportWidgetState extends State<ReportWidget> {
                             });
                           } else {
                             ReportsService().updateDislike(
-                                context, widget.report.id, dislike - 1);
+                              context,
+                              widget.report.id,
+                              dislike - 1,
+                              user!.email!,
+                              false,
+                            );
                             setState(() {
                               dislike -= 1;
                               dislikeState = false;
