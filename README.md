@@ -1,4 +1,4 @@
-# watch_out
+# Watch Out
 
 A new Flutter project to minimize civilian casualties.
 
