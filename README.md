@@ -51,7 +51,7 @@ On maps page, our application show you to all zones. This zones can be filtered 
 
 ![rsz_1screenshot_1708806006](https://github.com/kodadasiofficial/Watch_Out/assets/46077038/b6727734-331b-4a3f-be46-048a3f58138c)
 
-On create report page, our application show your reports zone on map. Also you can add type of your report, report name,report heading and description to your report. When you click to the post it button, your report is shared by all users. In addition to that, for emergency , you can create report without changing any thing just clicking post it button.
+On create report page, our application show your reports zone on map. You can add report with 1 km zone which is your location is at center and shown with blue. Also you can add type of your report, report name,report heading and description to your report. When you click to the post it button, your report is shared by all users. In addition to that, for emergency , you can create report without changing any thing just clicking post it button.
 
 ### Reports Page
 
