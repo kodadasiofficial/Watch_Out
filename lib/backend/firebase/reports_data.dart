@@ -31,6 +31,7 @@ class ReportsService {
         longitude: location.longitude,
         reporterName: curUser["name"].toString(),
         reporterProfilePhoto: curUser["profile_photo_url"].toString(),
+        reporterMail: curUser["email"],
         reportType: reportType,
         report: report,
         reportHead: reportHead ?? "",

@@ -35,12 +35,12 @@ class SocialMediaConnection extends StatelessWidget {
               ),
               const SizedBox(width: 30),
               IconButton(
-                onPressed: () => AuthService().signInWithGoogle(context),
+                onPressed: () {},
                 icon: Image.asset("assets/images/facebook.png"),
               ),
               const SizedBox(width: 30),
               IconButton(
-                onPressed: () => AuthService().signInWithGoogle(context),
+                onPressed: () {},
                 icon: Image.asset("assets/images/apple.png"),
               ),
             ],

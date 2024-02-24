@@ -107,100 +107,106 @@ class _ReportWidgetState extends State<ReportWidget> {
                     ],
                   ),
                   Text(dateFormat.format(widget.report.createdAt)),
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          if (!likeState) {
-                            ReportsService().updateLike(
-                              context,
-                              widget.report.id,
-                              like + 1,
-                              user!.email!,
-                              true,
-                            );
-                            if (dislikeState) {
-                              ReportsService().updateDislike(
-                                context,
-                                widget.report.id,
-                                dislike - 1,
-                                user!.email!,
-                                false,
-                              );
-                              dislike -= 1;
-                              dislikeState = false;
-                            }
-                            setState(() {
-                              like += 1;
-                              likeState = true;
-                              dislikeState = false;
-                            });
-                          } else {
-                            ReportsService().updateLike(
-                              context,
-                              widget.report.id,
-                              like - 1,
-                              user!.email!,
-                              false,
-                            );
-                            setState(() {
-                              like -= 1;
-                              likeState = false;
-                            });
-                          }
-                        },
-                        icon: likeState
-                            ? const Icon(Icons.thumb_up_alt)
-                            : const Icon(Icons.thumb_up_alt_outlined),
-                      ),
-                      Text(like.toString()),
-                      IconButton(
-                        onPressed: () {
-                          if (!dislikeState) {
-                            ReportsService().updateDislike(
-                              context,
-                              widget.report.id,
-                              dislike + 1,
-                              user!.email!,
-                              true,
-                            );
-                            if (likeState) {
-                              ReportsService().updateLike(
-                                context,
-                                widget.report.id,
-                                like - 1,
-                                user!.email!,
-                                false,
-                              );
-                              like -= 1;
-                              likeState = false;
-                            }
-                            setState(() {
-                              dislike += 1;
-                              likeState = false;
-                              dislikeState = true;
-                            });
-                          } else {
-                            ReportsService().updateDislike(
-                              context,
-                              widget.report.id,
-                              dislike - 1,
-                              user!.email!,
-                              false,
-                            );
-                            setState(() {
-                              dislike -= 1;
-                              dislikeState = false;
-                            });
-                          }
-                        },
-                        icon: dislikeState
-                            ? const Icon(Icons.thumb_down_alt)
-                            : const Icon(Icons.thumb_down_alt_outlined),
-                      ),
-                      Text(dislike.toString()),
-                    ],
-                  ),
+                  user!.email! != widget.report.reporterMail
+                      ? Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                if (!likeState) {
+                                  ReportsService().updateLike(
+                                    context,
+                                    widget.report.id,
+                                    like + 1,
+                                    user!.email!,
+                                    true,
+                                  );
+                                  if (dislikeState) {
+                                    ReportsService().updateDislike(
+                                      context,
+                                      widget.report.id,
+                                      dislike - 1,
+                                      user!.email!,
+                                      false,
+                                    );
+                                    dislike -= 1;
+                                    dislikeState = false;
+                                  }
+                                  setState(() {
+                                    like += 1;
+                                    likeState = true;
+                                    dislikeState = false;
+                                  });
+                                } else {
+                                  ReportsService().updateLike(
+                                    context,
+                                    widget.report.id,
+                                    like - 1,
+                                    user!.email!,
+                                    false,
+                                  );
+                                  setState(() {
+                                    like -= 1;
+                                    likeState = false;
+                                  });
+                                }
+                              },
+                              icon: likeState
+                                  ? const Icon(Icons.thumb_up_alt)
+                                  : const Icon(Icons.thumb_up_alt_outlined),
+                            ),
+                            Text(like.toString()),
+                            IconButton(
+                              onPressed: () {
+                                if (!dislikeState) {
+                                  ReportsService().updateDislike(
+                                    context,
+                                    widget.report.id,
+                                    dislike + 1,
+                                    user!.email!,
+                                    true,
+                                  );
+                                  if (likeState) {
+                                    ReportsService().updateLike(
+                                      context,
+                                      widget.report.id,
+                                      like - 1,
+                                      user!.email!,
+                                      false,
+                                    );
+                                    like -= 1;
+                                    likeState = false;
+                                  }
+                                  setState(() {
+                                    dislike += 1;
+                                    likeState = false;
+                                    dislikeState = true;
+                                  });
+                                } else {
+                                  ReportsService().updateDislike(
+                                    context,
+                                    widget.report.id,
+                                    dislike - 1,
+                                    user!.email!,
+                                    false,
+                                  );
+                                  setState(() {
+                                    dislike -= 1;
+                                    dislikeState = false;
+                                  });
+                                }
+                              },
+                              icon: dislikeState
+                                  ? const Icon(Icons.thumb_down_alt)
+                                  : const Icon(Icons.thumb_down_alt_outlined),
+                            ),
+                            Text(dislike.toString()),
+                          ],
+                        )
+                      : Container(
+                          height: 50,
+                          alignment: Alignment.centerLeft,
+                          child: const Text("This is your report"),
+                        ),
                   Container(
                     width: double.infinity,
                     height: 60,

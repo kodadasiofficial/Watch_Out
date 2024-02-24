@@ -82,98 +82,104 @@ class _NearReportCardState extends State<NearReportCard> {
             Text(
               dateFormat.format(report.createdAt),
             ),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () async {
-                    if (!likeState) {
-                      ReportsService().updateLike(
-                        context,
-                        report.id,
-                        like + 1,
-                        user!.email!,
-                        true,
-                      );
-                      if (dislikeState) {
-                        ReportsService().updateDislike(
-                          context,
-                          report.id,
-                          dislike - 1,
-                          user!.email!,
-                          false,
-                        );
-                        dislike -= 1;
-                        dislikeState = false;
-                      }
-                      setState(() {
-                        like += 1;
-                        likeState = true;
-                      });
-                    } else {
-                      ReportsService().updateLike(
-                        context,
-                        report.id,
-                        like - 1,
-                        user!.email!,
-                        false,
-                      );
-                      setState(() {
-                        like -= 1;
-                        likeState = false;
-                      });
-                    }
-                  },
-                  icon: likeState
-                      ? const Icon(Icons.thumb_up_alt)
-                      : const Icon(Icons.thumb_up_alt_outlined),
-                ),
-                Text(like.toString()),
-                IconButton(
-                  onPressed: () async {
-                    if (!dislikeState) {
-                      ReportsService().updateDislike(
-                        context,
-                        report.id,
-                        dislike + 1,
-                        user!.email!,
-                        true,
-                      );
-                      if (likeState) {
-                        ReportsService().updateLike(
-                          context,
-                          report.id,
-                          like - 1,
-                          user!.email!,
-                          false,
-                        );
-                        like -= 1;
-                        likeState = false;
-                      }
-                      setState(() {
-                        dislike += 1;
-                        dislikeState = true;
-                      });
-                    } else {
-                      ReportsService().updateDislike(
-                        context,
-                        report.id,
-                        dislike - 1,
-                        user!.email!,
-                        false,
-                      );
-                      setState(() {
-                        dislike -= 1;
-                        dislikeState = false;
-                      });
-                    }
-                  },
-                  icon: dislikeState
-                      ? const Icon(Icons.thumb_down_alt)
-                      : const Icon(Icons.thumb_down_alt_outlined),
-                ),
-                Text(dislike.toString()),
-              ],
-            ),
+            user!.email != report.reporterMail
+                ? Row(
+                    children: [
+                      IconButton(
+                        onPressed: () async {
+                          if (!likeState) {
+                            ReportsService().updateLike(
+                              context,
+                              report.id,
+                              like + 1,
+                              user!.email!,
+                              true,
+                            );
+                            if (dislikeState) {
+                              ReportsService().updateDislike(
+                                context,
+                                report.id,
+                                dislike - 1,
+                                user!.email!,
+                                false,
+                              );
+                              dislike -= 1;
+                              dislikeState = false;
+                            }
+                            setState(() {
+                              like += 1;
+                              likeState = true;
+                            });
+                          } else {
+                            ReportsService().updateLike(
+                              context,
+                              report.id,
+                              like - 1,
+                              user!.email!,
+                              false,
+                            );
+                            setState(() {
+                              like -= 1;
+                              likeState = false;
+                            });
+                          }
+                        },
+                        icon: likeState
+                            ? const Icon(Icons.thumb_up_alt)
+                            : const Icon(Icons.thumb_up_alt_outlined),
+                      ),
+                      Text(like.toString()),
+                      IconButton(
+                        onPressed: () async {
+                          if (!dislikeState) {
+                            ReportsService().updateDislike(
+                              context,
+                              report.id,
+                              dislike + 1,
+                              user!.email!,
+                              true,
+                            );
+                            if (likeState) {
+                              ReportsService().updateLike(
+                                context,
+                                report.id,
+                                like - 1,
+                                user!.email!,
+                                false,
+                              );
+                              like -= 1;
+                              likeState = false;
+                            }
+                            setState(() {
+                              dislike += 1;
+                              dislikeState = true;
+                            });
+                          } else {
+                            ReportsService().updateDislike(
+                              context,
+                              report.id,
+                              dislike - 1,
+                              user!.email!,
+                              false,
+                            );
+                            setState(() {
+                              dislike -= 1;
+                              dislikeState = false;
+                            });
+                          }
+                        },
+                        icon: dislikeState
+                            ? const Icon(Icons.thumb_down_alt)
+                            : const Icon(Icons.thumb_down_alt_outlined),
+                      ),
+                      Text(dislike.toString()),
+                    ],
+                  )
+                : Container(
+                    height: 50,
+                    alignment: Alignment.centerLeft,
+                    child: const Text("This is your report"),
+                  ),
           ],
         ),
       ),

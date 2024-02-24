@@ -5,6 +5,7 @@ class Report extends WatchOutObject {
   final double longitude;
   final String reporterName;
   final String reporterProfilePhoto;
+  final String reporterMail;
   final String reportType;
   final String report;
   final String reportHead;
@@ -18,6 +19,7 @@ class Report extends WatchOutObject {
     required this.longitude,
     required this.reporterName,
     required this.reporterProfilePhoto,
+    required this.reporterMail,
     required this.reportType,
     required this.report,
     required this.reportHead,
@@ -38,6 +40,7 @@ class Report extends WatchOutObject {
     double? longitude,
     String? reporterName,
     String? reporterProfilePhoto,
+    String? reporterMail,
     String? reportType,
     String? report,
     String? reportHead,
@@ -53,6 +56,7 @@ class Report extends WatchOutObject {
       longitude: longitude ?? this.longitude,
       reporterName: reporterName ?? this.reporterName,
       reporterProfilePhoto: reporterProfilePhoto ?? this.reporterProfilePhoto,
+      reporterMail: reporterMail ?? this.reporterMail,
       reportType: reportType ?? this.reportType,
       reportHead: reportHead ?? this.reportHead,
       report: report ?? this.report,
@@ -69,6 +73,7 @@ class Report extends WatchOutObject {
         longitude = map["longitude"].toDouble(),
         reporterName = map["reporter_name"],
         reporterProfilePhoto = map["reporter_profile_photo"],
+        reporterMail = map["reporter_mail"],
         reportType = map["report_type"],
         report = map["report"],
         reportHead = map["report_head"],
@@ -84,6 +89,7 @@ class Report extends WatchOutObject {
       "longitude": longitude,
       "reporter_name": reporterName,
       "reporter_profile_photo": reporterProfilePhoto,
+      "reporter_mail": reporterMail,
       "report_type": reportType,
       "report": report,
       "report_head": reportHead,
